@@ -1,7 +1,11 @@
 package app.ecosense;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.projection.MediaProjection;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -52,7 +56,8 @@ public class PostsFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
             FetchPost selectedPost = new FetchPost();
-            //TO TO Execute Post Activity
+            //TODO get posts from EcoSense to display
+            selectedPost.execute();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -81,13 +86,13 @@ public class PostsFragment extends Fragment {
                 new ArrayAdapter<String>(
                         getActivity(), // The current context (this activity)
                         R.layout.list_item_posts, // The name of the layout ID
-                        R.id.list_item_posts_textview, // The ID of the textview
+                        R.id.list_item_posts_title, // The ID of the textview
                         postListArray);
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         // Get a reference to the ListView, and attach this adapter to it
-        ListView listView = (ListView) rootView.findViewById(R.id.listview_posts);
+        ListView listView = (ListView) rootView.findViewById(R.id.listview_posts_title);
         listView.setAdapter(postsAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -102,7 +107,42 @@ public class PostsFragment extends Fragment {
         return rootView;
     }
 
-    public class FetchPost {
+    private void updatePosts() {
+        FetchPost posts = new FetchPost();
+        //TODO get posts from Ecosense
+        //posts.execute();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        updatePosts();
+    }
+
+    public class FetchPost extends AsyncTask<String, Void, String[]> {
+
+
+        @Override
+        protected String[] doInBackground(String... params) {
+
+            // If there's no zip code, there's nothing to look up.  Verify size of params.
+            if (params.length == 0) {
+                return null;
+            }
+
+            // These two need to be declared outside the try/catch
+            // so that they can be closed in the finally block.
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            // Will contain the raw JSON response as a string.
+            String forecastJsonStr = null;
+
+            String format = "json";
+            String units = "metric";
+
+            return null;
+        }
 
         private String[] getDataFromJson(String postJsonStr, int numDays) throws JSONException {
             JSONObject postJason = new JSONObject(postJsonStr);
@@ -111,19 +151,17 @@ public class PostsFragment extends Fragment {
             int numberOfPosts = 10;
             String[] resultStrings = new String[numberOfPosts];
             for(int i = 0; i < postsArray.length(); i++) {
-                // For now, using the format "Day, description, hi/low"
                 String title;
                 String description;
 
                 // Get the JSON object representing the post
                 JSONObject post = postsArray.getJSONObject(i);
 
-                // The date/time is returned as a long.  We need to convert that
-                // into something human-readable, since most people won't read "1400356800" as
-                // "this saturday".
+                // The date/time is returned as a long.  We need to convert that to read "1400356800" as
+                // "this saturday"
                 title = post.getString("title");
 
-                // description is in a child array called "weather", which is 1 element long.
+                // description is in a child array
                 description = post.getString("description");
 
                 resultStrings[i] = title + " - " + description;
@@ -131,6 +169,19 @@ public class PostsFragment extends Fragment {
             return resultStrings;
 
         }
+
+        @Override
+        protected void onPostExecute(String[] result) {
+            if (result != null) {
+                postsAdapter.clear();
+                for(String postString : result) {
+                    postsAdapter.add(postString);
+                }
+                // New data from server
+            }
+        }
     }
+
+
 }
 
