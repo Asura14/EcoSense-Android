@@ -1,11 +1,8 @@
 package app.ecosense;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.media.projection.MediaProjection;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,8 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,6 +31,8 @@ import java.util.List;
 public class PostsFragment extends Fragment {
 
     private ArrayAdapter<String> postsAdapter;
+    private ArrayAdapter<String> postsAdapterDesc;
+
 
     public PostsFragment() {
     }
@@ -82,17 +81,21 @@ public class PostsFragment extends Fragment {
 
         final List<String> postListArray = new ArrayList<String>(Arrays.asList(postsList));
 
-        postsAdapter =
-                new ArrayAdapter<String>(
-                        getActivity(), // The current context (this activity)
-                        R.layout.list_item_posts, // The name of the layout ID
-                        R.id.list_item_posts_title, // The ID of the textview
-                        postListArray);
+        postsAdapter = new ArrayAdapter<String>(
+                getActivity(), // The current context (this activity)
+                R.layout.list_item_posts, // The name of the layout ID
+                R.id.list_item_posts_title, // The ID of the textview
+                postListArray);
+
+        View listPostView = View.inflate(getContext(),R.layout.list_item_posts, null);
+        //Image
+        ImageView icon = (ImageView) listPostView.findViewById(R.id.list_item_icon);
+        icon.setImageResource(R.drawable.trigo_cmat);
+
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
         // Get a reference to the ListView, and attach this adapter to it
-        ListView listView = (ListView) rootView.findViewById(R.id.listview_posts_title);
+        ListView listView = (ListView) rootView.findViewById(R.id.listview_posts);
         listView.setAdapter(postsAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -157,11 +160,8 @@ public class PostsFragment extends Fragment {
                 // Get the JSON object representing the post
                 JSONObject post = postsArray.getJSONObject(i);
 
-                // The date/time is returned as a long.  We need to convert that to read "1400356800" as
-                // "this saturday"
+                //TODO later
                 title = post.getString("title");
-
-                // description is in a child array
                 description = post.getString("description");
 
                 resultStrings[i] = title + " - " + description;
