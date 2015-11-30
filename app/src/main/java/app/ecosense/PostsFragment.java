@@ -28,6 +28,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import it.gmariotti.cardslib.library.internal.Card;
+import it.gmariotti.cardslib.library.internal.CardHeader;
+import it.gmariotti.cardslib.library.view.CardView;
+import it.gmariotti.cardslib.library.view.CardViewNative;
+
 /**
  * Created by Luis on 16/11/2015.
  */
@@ -67,6 +72,8 @@ public class PostsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 
+        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        /*
         String[] postsList = {
                 "Post1 es here",
                 "Post2 es here",
@@ -89,7 +96,6 @@ public class PostsFragment extends Fragment {
                         R.id.list_item_posts_title, // The ID of the textview
                         postListArray);
 
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         // Get a reference to the ListView, and attach this adapter to it
         ListView listView = (ListView) rootView.findViewById(R.id.listview_posts_title);
@@ -103,6 +109,21 @@ public class PostsFragment extends Fragment {
                 startActivity(postIntent);
             }
         });
+        */
+
+        //Create a Card
+        Card card = new Card(getContext());
+
+        //Create a CardHeader
+        CardHeader header = new CardHeader(getContext());
+        header.setTitle("MELO");
+        //Add Header to card
+        card.addCardHeader(header);
+
+        //Set card in the cardView
+        CardView cardView = (CardView) rootView.findViewById(R.id.teste);
+        cardView.setCard(card);
+
 
         return rootView;
     }
