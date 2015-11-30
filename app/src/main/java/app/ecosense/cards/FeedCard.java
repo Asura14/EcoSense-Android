@@ -17,7 +17,8 @@ public class FeedCard extends Card {
 
     protected TextView mTitle;
     protected TextView mTeaser;
-    protected TextView mAuthorAndDate;
+    protected TextView mAuthor;
+    protected TextView mDate;
     protected ImageView mImage;
 
 
@@ -25,6 +26,7 @@ public class FeedCard extends Card {
     private String teaser;
     private String author;
     private String imageUrl;
+    private String date;
 
 
     public FeedCard(Context context) {
@@ -69,6 +71,9 @@ public class FeedCard extends Card {
     public void setImageUrl(String url){
         this.imageUrl = url;
     }
+    public void setDate(String date){
+        this.date = date;
+    }
 
     @Override
     public void setupInnerViewElements(ViewGroup parent, View view) {
@@ -76,12 +81,13 @@ public class FeedCard extends Card {
         //Retrieve elements
         mTitle = (TextView) parent.findViewById(R.id.card_title);
         mTeaser = (TextView) parent.findViewById(R.id.card_teaser);
-        mAuthorAndDate = (TextView) parent.findViewById(R.id.card_author);
+        mAuthor = (TextView) parent.findViewById(R.id.card_author);
         mImage = (ImageView) parent.findViewById(R.id.card_image);
+        mDate = (TextView) parent.findViewById(R.id.card_date);
 
         android.view.ViewGroup.LayoutParams layoutParams = mImage.getLayoutParams();
-        layoutParams.width = 350;
-        layoutParams.height = 350;
+        layoutParams.width = 100;
+        layoutParams.height = 100;
         mImage.setLayoutParams(layoutParams);
 
 
@@ -91,8 +97,11 @@ public class FeedCard extends Card {
         if (mTeaser != null)
             mTeaser.setText(this.teaser);
 
-        if (mAuthorAndDate != null)
-            mAuthorAndDate.setText(this.author);
+        if (mAuthor != null)
+            mAuthor.setText(this.author);
+
+        if (mDate != null)
+            mDate.setText(this.date);
 
         if(imageUrl != null)
             new DownloadImageTask(mImage).execute(imageUrl);

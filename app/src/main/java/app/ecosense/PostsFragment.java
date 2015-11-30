@@ -84,18 +84,28 @@ public class PostsFragment extends Fragment {
         FeedCard card = new FeedCard(getContext());
         card.setTitle("This is the title");
         card.setTeaser("This is the teaser");
-        card.setAuthor("Author - Date");
-        card.setImageUrl("http://zoarchurch.co.uk/content/pages/uploaded_images/91.png");
+        card.setAuthor("Author");
+        card.setImageUrl("https://pbs.twimg.com/profile_images/378800000856151767/c9cda4e0452dcd6d66a70a33bb970d9b.jpeg");
+        card.setDate("10 Set.");
 
 
         FeedCard card1 = new FeedCard(getContext());
-        card1.setTitle("This is the title 2");
-        card1.setTeaser("This is the teaser 2");
-        card1.setAuthor("Author 2 - Date 2");
-        card1.setImageUrl("http://images2.fanpop.com/images/photos/5500000/Random-wallpapers-random-5549791-1280-800.jpg");
+        card1.setTitle("This is the title 1");
+        card1.setTeaser("This is the teaser 1");
+        card1.setAuthor("Author 2");
+        card1.setImageUrl("http://www.altcoinfever.com/wp-content/uploads/2014/02/pot.png");
+        card1.setDate("20 Set.");
+
+        FeedCard card2 = new FeedCard(getContext());
+        card2.setTitle("This is the title 2");
+        card2.setTeaser("This is the teaser 2");
+        card2.setAuthor("Author 2");
+        card2.setImageUrl("http://41.media.tumblr.com/b72cff4e0b89f9e08ef0ab2f6ce67fa6/tumblr_nr67uoBubF1twhxf0o1_500.png");
+        card2.setDate("21 Set.");
 
         cards.add(card);
         cards.add(card1);
+        cards.add(card2);
 
         CardArrayRecyclerViewAdapter mCardArrayAdapter = new CardArrayRecyclerViewAdapter(getActivity(), cards);
 
@@ -108,8 +118,6 @@ public class PostsFragment extends Fragment {
         if (mRecyclerView != null) {
             mRecyclerView.setAdapter(mCardArrayAdapter);
         }
-
-
 
 
         return rootView;
