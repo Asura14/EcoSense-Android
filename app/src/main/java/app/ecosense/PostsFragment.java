@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,8 +29,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import app.ecosense.cards.FeedCard;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
+import it.gmariotti.cardslib.library.recyclerview.internal.CardArrayRecyclerViewAdapter;
+import it.gmariotti.cardslib.library.recyclerview.view.CardRecyclerView;
 import it.gmariotti.cardslib.library.view.CardView;
 import it.gmariotti.cardslib.library.view.CardViewNative;
 
@@ -73,56 +77,39 @@ public class PostsFragment extends Fragment {
 
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        /*
-        String[] postsList = {
-                "Post1 es here",
-                "Post2 es here",
-                "Post3 es here",
-                "Post4 es here",
-                "Post5 es here",
-                "Post6 es here",
-                "Post7 es here",
-                "Post8 es here",
-                "Post9 es here",
-                "Post10 es here",
-        };
 
-        final List<String> postListArray = new ArrayList<String>(Arrays.asList(postsList));
+        ArrayList<Card> cards = new ArrayList<Card>();
 
-        postsAdapter =
-                new ArrayAdapter<String>(
-                        getActivity(), // The current context (this activity)
-                        R.layout.list_item_posts, // The name of the layout ID
-                        R.id.list_item_posts_title, // The ID of the textview
-                        postListArray);
+        // TODO: add cards dynamically
+        FeedCard card = new FeedCard(getContext());
+        card.setTitle("This is the title");
+        card.setTeaser("This is the teaser");
+        card.setAuthor("Author - Date");
+        card.setImageUrl("http://zoarchurch.co.uk/content/pages/uploaded_images/91.png");
 
 
-        // Get a reference to the ListView, and attach this adapter to it
-        ListView listView = (ListView) rootView.findViewById(R.id.listview_posts_title);
-        listView.setAdapter(postsAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String posts = postsAdapter.getItem(position);
-                Intent postIntent = new Intent(getActivity(), DetailActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, posts);
-                startActivity(postIntent);
-            }
-        });
-        */
+        FeedCard card1 = new FeedCard(getContext());
+        card1.setTitle("This is the title 2");
+        card1.setTeaser("This is the teaser 2");
+        card1.setAuthor("Author 2 - Date 2");
+        card1.setImageUrl("http://images2.fanpop.com/images/photos/5500000/Random-wallpapers-random-5549791-1280-800.jpg");
 
-        //Create a Card
-        Card card = new Card(getContext());
+        cards.add(card);
+        cards.add(card1);
 
-        //Create a CardHeader
-        CardHeader header = new CardHeader(getContext());
-        header.setTitle("MELO");
-        //Add Header to card
-        card.addCardHeader(header);
+        CardArrayRecyclerViewAdapter mCardArrayAdapter = new CardArrayRecyclerViewAdapter(getActivity(), cards);
 
-        //Set card in the cardView
-        CardView cardView = (CardView) rootView.findViewById(R.id.teste);
-        cardView.setCard(card);
+        //Staggered grid view
+        CardRecyclerView mRecyclerView = (CardRecyclerView) rootView.findViewById(R.id.feed_recyclerview);
+        mRecyclerView.setHasFixedSize(false);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        //Set the empty view
+        if (mRecyclerView != null) {
+            mRecyclerView.setAdapter(mCardArrayAdapter);
+        }
+
+
 
 
         return rootView;
