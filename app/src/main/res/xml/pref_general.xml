@@ -29,4 +29,10 @@
         android:inputType="text"
         android:singleLine="true" />
 
+    <Preference
+        android:layout="@layout/layout_buttons"
+        android:key="loginButtons">
+
+    </Preference>
+
 </PreferenceScreen>
