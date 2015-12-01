@@ -1,12 +1,12 @@
 package app.ecosense;
 
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.media.projection.MediaProjection;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,10 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,23 +22,19 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import app.ecosense.cards.FeedCard;
 import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.recyclerview.internal.CardArrayRecyclerViewAdapter;
 import it.gmariotti.cardslib.library.recyclerview.view.CardRecyclerView;
-import it.gmariotti.cardslib.library.view.CardView;
-import it.gmariotti.cardslib.library.view.CardViewNative;
 
 /**
  * Created by Luis on 16/11/2015.
  */
-public class PostsFragment extends Fragment {
+public class PostsFragment extends Fragment implements CardView.OnClickListener {
 
-    private ArrayAdapter<String> postsAdapter;
+    private CardArrayRecyclerViewAdapter mCardArrayAdapter;
+    public View.OnClickListener mListener;
 
     public PostsFragment() {
     }
@@ -53,6 +45,11 @@ public class PostsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent postIntent = new Intent(getActivity(), DetailActivity.class).putExtra(Intent.EXTRA_TEXT, v.toString());
     }
 
     @Override
@@ -85,7 +82,7 @@ public class PostsFragment extends Fragment {
         card.setTitle("This is the title");
         card.setTeaser("This is the teaser");
         card.setAuthor("Author");
-        card.setImageUrl("https://pbs.twimg.com/profile_images/378800000856151767/c9cda4e0452dcd6d66a70a33bb970d9b.jpeg");
+        card.setImageUrl("http://www.247inktoner.com/blog/image.axd?picture=%2F2013%2F02%2Fecofriendly21.jpg");
         card.setDate("10 Set.");
 
 
@@ -93,21 +90,21 @@ public class PostsFragment extends Fragment {
         card1.setTitle("This is the title 1");
         card1.setTeaser("This is the teaser 1");
         card1.setAuthor("Author 2");
-        card1.setImageUrl("http://www.altcoinfever.com/wp-content/uploads/2014/02/pot.png");
+        card1.setImageUrl("http://www.247inktoner.com/blog/image.axd?picture=%2F2013%2F02%2Fecofriendly21.jpg");
         card1.setDate("20 Set.");
 
         FeedCard card2 = new FeedCard(getContext());
         card2.setTitle("This is the title 2");
         card2.setTeaser("This is the teaser 2");
         card2.setAuthor("Author 2");
-        card2.setImageUrl("http://41.media.tumblr.com/b72cff4e0b89f9e08ef0ab2f6ce67fa6/tumblr_nr67uoBubF1twhxf0o1_500.png");
+        card2.setImageUrl("http://www.247inktoner.com/blog/image.axd?picture=%2F2013%2F02%2Fecofriendly21.jpg");
         card2.setDate("21 Set.");
 
         cards.add(card);
         cards.add(card1);
         cards.add(card2);
 
-        CardArrayRecyclerViewAdapter mCardArrayAdapter = new CardArrayRecyclerViewAdapter(getActivity(), cards);
+        mCardArrayAdapter = new CardArrayRecyclerViewAdapter(getActivity(), cards);
 
         //Staggered grid view
         CardRecyclerView mRecyclerView = (CardRecyclerView) rootView.findViewById(R.id.feed_recyclerview);
@@ -160,41 +157,12 @@ public class PostsFragment extends Fragment {
             return null;
         }
 
-        private String[] getDataFromJson(String postJsonStr, int numDays) throws JSONException {
+        private void getDataFromJson(String postJsonStr, int numDays) throws JSONException {
             JSONObject postJason = new JSONObject(postJsonStr);
             JSONArray postsArray = postJason.getJSONArray("title");
 
-            int numberOfPosts = 10;
-            String[] resultStrings = new String[numberOfPosts];
-            for(int i = 0; i < postsArray.length(); i++) {
-                String title;
-                String description;
+            return;
 
-                // Get the JSON object representing the post
-                JSONObject post = postsArray.getJSONObject(i);
-
-                // The date/time is returned as a long.  We need to convert that to read "1400356800" as
-                // "this saturday"
-                title = post.getString("title");
-
-                // description is in a child array
-                description = post.getString("description");
-
-                resultStrings[i] = title + " - " + description;
-            }
-            return resultStrings;
-
-        }
-
-        @Override
-        protected void onPostExecute(String[] result) {
-            if (result != null) {
-                postsAdapter.clear();
-                for(String postString : result) {
-                    postsAdapter.add(postString);
-                }
-                // New data from server
-            }
         }
     }
 
