@@ -75,6 +75,14 @@ public class FeedCard extends Card {
         this.date = date;
     }
 
+    public String getTitle() {
+        return this.title;
+    }
+    public String getTeaser() {return this.teaser;}
+    public String getAuthor() {return this.author;}
+    public String getImageUrl() { return this.imageUrl;}
+    public String getDate() { return this.date;}
+
     @Override
     public void setupInnerViewElements(ViewGroup parent, View view) {
 

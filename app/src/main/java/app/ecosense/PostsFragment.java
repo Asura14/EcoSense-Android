@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,6 +25,7 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 
 import app.ecosense.cards.FeedCard;
+import app.ecosense.models.Post;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.recyclerview.internal.CardArrayRecyclerViewAdapter;
 import it.gmariotti.cardslib.library.recyclerview.view.CardRecyclerView;
@@ -115,11 +117,19 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
         if (mRecyclerView != null) {
             mRecyclerView.setAdapter(mCardArrayAdapter);
         }
-
+/*
+        mRecyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                mCardArrayAdapter.getItem(position);
+                Intent postIntent = new Intent(getActivity(), DetailActivity.class).putExtra("Post", newPost);
+                startActivity(postIntent);
+            }
+        });
 
         return rootView;
     }
-
+*/
     private void updatePosts() {
         FetchPost posts = new FetchPost();
         //TODO get posts from Ecosense

@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import app.ecosense.models.Post;
+
 public class DetailActivity extends ActionBarActivity {
 
     @Override
@@ -64,9 +66,9 @@ public class DetailActivity extends ActionBarActivity {
 
             // The detail Activity called via intent
             Intent intent = getActivity().getIntent();
-            if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-                String postString = intent.getStringExtra(Intent.EXTRA_TEXT);
-                ((TextView) rootView.findViewById(R.id.detail_text)).setText(postString);
+            if (intent != null) {
+                intent.getSerializableExtra("Post");
+                rootView.findViewById(R.id.detail_text);
             }
             return rootView;
         }

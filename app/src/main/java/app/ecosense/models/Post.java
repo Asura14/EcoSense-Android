@@ -7,10 +7,10 @@ public class Post {
     private String teaser;
     private String description;
     private String author;
-    private Date postDate;
+    private String postDate;
 
     public Post() {}
-    public Post(String title, String teaser, String description, String author, Date postDate) {
+    public Post(String title, String teaser, String description, String author, String postDate) {
         this.title = title;
         this.teaser = teaser;
         this.description = description;
@@ -26,7 +26,7 @@ public class Post {
     public void setDescription(String description) {
         this.description = description;
     }
-    public void setPostDate(Date postDate) {
+    public void setPostDate(String postDate) {
         this.postDate = postDate;
     }
     public void setAuthor(String author) {
