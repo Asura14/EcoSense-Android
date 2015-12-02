@@ -117,19 +117,10 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
         if (mRecyclerView != null) {
             mRecyclerView.setAdapter(mCardArrayAdapter);
         }
-/*
-        mRecyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                mCardArrayAdapter.getItem(position);
-                Intent postIntent = new Intent(getActivity(), DetailActivity.class).putExtra("Post", newPost);
-                startActivity(postIntent);
-            }
-        });
 
         return rootView;
     }
-*/
+
     private void updatePosts() {
         FetchPost posts = new FetchPost();
         //TODO get posts from Ecosense
@@ -146,34 +137,13 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
 
 
         @Override
-        protected String[] doInBackground(String... params) {
+        protected String[] doInBackground(String... uri) {
 
-            // If there's no zip code, there's nothing to look up.  Verify size of params.
-            if (params.length == 0) {
-                return null;
-            }
-
-            // These two need to be declared outside the try/catch
-            // so that they can be closed in the finally block.
-            HttpURLConnection urlConnection = null;
-            BufferedReader reader = null;
-
-            // Will contain the raw JSON response as a string.
-            String forecastJsonStr = null;
-
-            String format = "json";
-            String units = "metric";
 
             return null;
         }
 
-        private void getDataFromJson(String postJsonStr, int numDays) throws JSONException {
-            JSONObject postJason = new JSONObject(postJsonStr);
-            JSONArray postsArray = postJason.getJSONArray("title");
 
-            return;
-
-        }
     }
 
 
