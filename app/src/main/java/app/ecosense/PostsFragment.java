@@ -1,10 +1,8 @@
 package app.ecosense;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,32 +12,37 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import app.ecosense.cards.FeedCard;
+import app.ecosense.models.Comment;
 import app.ecosense.models.Post;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.recyclerview.internal.CardArrayRecyclerViewAdapter;
 import it.gmariotti.cardslib.library.recyclerview.view.CardRecyclerView;
 
-/**
- * Created by Luis on 16/11/2015.
- */
 public class PostsFragment extends Fragment implements CardView.OnClickListener {
 
     private CardArrayRecyclerViewAdapter mCardArrayAdapter;
+    public ArrayList<Post> postsFromEcosense = new ArrayList<>();
+    public CardRecyclerView mRecyclerView;
     public View.OnClickListener mListener;
+    public ArrayList<Card> cards = new ArrayList<>();
 
-    public PostsFragment() {
-    }
+    public PostsFragment() {}
 
 
     @Override
@@ -47,6 +50,7 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
+        new FetchPosts().execute();
     }
 
     @Override
@@ -63,9 +67,6 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-            FetchPost selectedPost = new FetchPost();
-            //TODO get posts from EcoSense to display
-            selectedPost.execute();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -74,42 +75,11 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        ArrayList<Card> cards = new ArrayList<Card>();
-
-        // TODO: add cards dynamically
-        FeedCard card = new FeedCard(getContext());
-        card.setTitle("This is the title");
-        card.setTeaser("This is the teaser");
-        card.setAuthor("Author");
-        card.setImageUrl("http://www.247inktoner.com/blog/image.axd?picture=%2F2013%2F02%2Fecofriendly21.jpg");
-        card.setDate("10 Set.");
-
-
-        FeedCard card1 = new FeedCard(getContext());
-        card1.setTitle("This is the title 1");
-        card1.setTeaser("This is the teaser 1");
-        card1.setAuthor("Author 2");
-        card1.setImageUrl("http://www.247inktoner.com/blog/image.axd?picture=%2F2013%2F02%2Fecofriendly21.jpg");
-        card1.setDate("20 Set.");
-
-        FeedCard card2 = new FeedCard(getContext());
-        card2.setTitle("This is the title 2");
-        card2.setTeaser("This is the teaser 2");
-        card2.setAuthor("Author 2");
-        card2.setImageUrl("http://www.247inktoner.com/blog/image.axd?picture=%2F2013%2F02%2Fecofriendly21.jpg");
-        card2.setDate("21 Set.");
-
-        cards.add(card);
-        cards.add(card1);
-        cards.add(card2);
-
         mCardArrayAdapter = new CardArrayRecyclerViewAdapter(getActivity(), cards);
-
         //Staggered grid view
-        CardRecyclerView mRecyclerView = (CardRecyclerView) rootView.findViewById(R.id.feed_recyclerview);
+        mRecyclerView = (CardRecyclerView) rootView.findViewById(R.id.feed_recyclerview);
         mRecyclerView.setHasFixedSize(false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -117,35 +87,97 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
         if (mRecyclerView != null) {
             mRecyclerView.setAdapter(mCardArrayAdapter);
         }
-
         return rootView;
-    }
-
-    private void updatePosts() {
-        FetchPost posts = new FetchPost();
-        //TODO get posts from Ecosense
-        //posts.execute();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        updatePosts();
     }
 
-    public class FetchPost extends AsyncTask<String, Void, String[]> {
-
+    public class FetchPosts extends AsyncTask<String, Void, JSONArray> {
 
         @Override
-        protected String[] doInBackground(String... uri) {
+        protected void onPostExecute(JSONArray posts) {
+            if(posts != null) {
+                for(int i = 0; i < posts.length(); i++) {
+                    try {
+                        Post newPost = new Post();
+                        JSONObject post = posts.getJSONObject(i);
+                        newPost.setAuthor(post.getString("name"));
+                        newPost.setDescription(post.getString("content"));
+                        newPost.setPostDate(post.getString("updated_at"));
+                        newPost.setTeaser(post.getString("teaser"));
+                        newPost.setTitle(post.getString("title"));
+                        newPost.setImage(post.getString("image_url"));
+                        JSONArray commentsJSON = post.getJSONArray("comments");
+                        ArrayList<Comment> commentsList = new ArrayList<>();
+                        for(int j = 0; j < commentsJSON.length(); j++) {
+                            JSONObject comment = commentsJSON.getJSONObject(j);
+                            Comment newComment = new Comment(comment.getString("name"),
+                                    comment.getString("created_at"),
+                                    comment.getString("content"));
+                            commentsList.add(newComment);
+                        }
+                        newPost.setComments(commentsList);
+                        postsFromEcosense.add(newPost);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
 
+            // Add cards
+            for(int i = 0; i < postsFromEcosense.size() && i < 30; i++) {
+                FeedCard card = new FeedCard(getContext());
+                card.setTitle(postsFromEcosense.get(i).getTitle());
+                card.setTeaser(postsFromEcosense.get(i).getTeaser());
+                card.setAuthor(postsFromEcosense.get(i).getAuthor());
+                card.setImageUrl(postsFromEcosense.get(i).getImage());
+                card.setDate(postsFromEcosense.get(i).getPostDate());
+                cards.add(card);
+            }
 
-            return null;
+            mRecyclerView.setAdapter(new CardArrayRecyclerViewAdapter(getActivity(), cards));
+            mRecyclerView.getAdapter().notifyDataSetChanged();
         }
 
+        @Override
+        protected JSONArray doInBackground(String... uri) {
 
+            URL url = null;
+            HttpURLConnection urlConnection = null;
+            JSONArray posts = null;
+            try {
+                url = new URL("http://crispy-cow-7805.vagrantshare.com/api/posts");
+                urlConnection = (HttpURLConnection) url.openConnection();
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                posts = getJSONFromInputStream(in);
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } finally {
+                urlConnection.disconnect();
+            }
+
+            return posts;
+        }
+
+        public JSONArray getJSONFromInputStream(InputStream in) throws IOException, JSONException {
+
+            BufferedReader streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+            StringBuilder responseStrBuilder = new StringBuilder();
+
+            String inputStr;
+            while ((inputStr = streamReader.readLine()) != null)
+                responseStrBuilder.append(inputStr);
+            return new JSONArray(responseStrBuilder.toString());
+        }
     }
-
 
 }
 

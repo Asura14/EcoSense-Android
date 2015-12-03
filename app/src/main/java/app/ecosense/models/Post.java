@@ -1,5 +1,10 @@
 package app.ecosense.models;
 
+import android.text.format.DateUtils;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Post {
@@ -8,6 +13,8 @@ public class Post {
     private String description;
     private String author;
     private String postDate;
+    private ArrayList<Comment> comments;
+    private String image;
 
     public Post() {}
     public Post(String title, String teaser, String description, String author, String postDate) {
@@ -27,9 +34,44 @@ public class Post {
         this.description = description;
     }
     public void setPostDate(String postDate) {
-        this.postDate = postDate;
+        postDate = postDate.replaceAll("T" , " ");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-DD hh:mm:ss");
+        try {
+            Date date = sdf.parse(postDate);
+            this.postDate = DateUtils.getRelativeTimeSpanString(date.getTime(), System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS).toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
     public void setAuthor(String author) {
         this.author = author;
+    }
+    public void setComments(ArrayList<Comment> comments) {
+        this.comments = comments;
+    }
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+    public String getTeaser() {
+        return teaser;
+    }
+    public String getDescription() {
+        return description;
+    }
+    public String getAuthor() {
+        return author;
+    }
+    public String getPostDate() {
+        return postDate;
+    }
+    public ArrayList<Comment> getComments() {
+        return comments;
+    }
+    public String getImage() {
+        return image;
     }
 }

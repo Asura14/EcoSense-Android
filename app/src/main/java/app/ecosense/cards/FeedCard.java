@@ -2,7 +2,6 @@ package app.ecosense.cards;
 
 
 import android.content.Context;
-import android.media.Image;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -34,7 +33,6 @@ public class FeedCard extends Card {
     }
 
     /**
-     *
      * @param context
      * @param innerLayout
      */
@@ -46,7 +44,7 @@ public class FeedCard extends Card {
     /**
      * Init
      */
-    private void init(){
+    private void init() {
 
         //No Header
 
@@ -59,29 +57,45 @@ public class FeedCard extends Card {
         });
     }
 
-    public void setTitle(String title){
-        this.title=title;
+    public void setTitle(String title) {
+        this.title = title;
     }
-    public void setTeaser(String teaser){
-        this.teaser=teaser;
+
+    public void setTeaser(String teaser) {
+        this.teaser = teaser;
     }
-    public void setAuthor(String author){
-        this.author=author;
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
-    public void setImageUrl(String url){
+
+    public void setImageUrl(String url) {
         this.imageUrl = url;
     }
-    public void setDate(String date){
+
+    public void setDate(String date) {
         this.date = date;
     }
 
     public String getTitle() {
         return this.title;
     }
-    public String getTeaser() {return this.teaser;}
-    public String getAuthor() {return this.author;}
-    public String getImageUrl() { return this.imageUrl;}
-    public String getDate() { return this.date;}
+
+    public String getTeaser() {
+        return this.teaser;
+    }
+
+    public String getAuthor() {
+        return this.author;
+    }
+
+    public String getImageUrl() {
+        return this.imageUrl;
+    }
+
+    public String getDate() {
+        return this.date;
+    }
 
     @Override
     public void setupInnerViewElements(ViewGroup parent, View view) {
@@ -99,7 +113,7 @@ public class FeedCard extends Card {
         mImage.setLayoutParams(layoutParams);
 
 
-        if (mTitle!=null)
+        if (mTitle != null)
             mTitle.setText(this.title);
 
         if (mTeaser != null)
