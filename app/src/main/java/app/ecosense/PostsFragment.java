@@ -1,5 +1,6 @@
 package app.ecosense;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -39,8 +40,8 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
     private CardArrayRecyclerViewAdapter mCardArrayAdapter;
     public ArrayList<Post> postsFromEcosense = new ArrayList<>();
     public CardRecyclerView mRecyclerView;
-    public View.OnClickListener mListener;
     public ArrayList<Card> cards = new ArrayList<>();
+    public Card.OnCardClickListener mCardListener;
 
     public PostsFragment() {}
 
@@ -55,7 +56,8 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        Intent postIntent = new Intent(getActivity(), DetailActivity.class).putExtra(Intent.EXTRA_TEXT, v.toString());
+        Activity postActivity = new Activity();
+        Intent postIntent = new Intent(postActivity, DetailActivity.class).putExtra(Intent.EXTRA_TEXT, v.getId());
     }
 
     @Override
@@ -87,6 +89,7 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
         if (mRecyclerView != null) {
             mRecyclerView.setAdapter(mCardArrayAdapter);
         }
+
         return rootView;
     }
 
@@ -135,7 +138,41 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
                 card.setAuthor(postsFromEcosense.get(i).getAuthor());
                 card.setImageUrl(postsFromEcosense.get(i).getImage());
                 card.setDate(postsFromEcosense.get(i).getPostDate());
+                card.setOnClickListener(new Card.OnCardClickListener() {
+                    @Override
+                    public void onClick(Card card, View view) {
+                        Activity postActivity = new Activity();
+                        Intent intent = new Intent(postActivity, DetailActivity.class).putExtra(Intent.EXTRA_TEXT, card.getId());
+                        startActivity(intent);
+                    }
+                });
+            }
+
+            //TO REMOVE
+            if(postsFromEcosense.size() == 0) {
+                FeedCard card = new FeedCard(getContext());
+                card.setTitle("This is the title");
+                card.setTeaser("This is the teaser");
+                card.setAuthor("Author");
+                card.setImageUrl("https://pbs.twimg.com/profile_images/378800000856151767/c9cda4e0452dcd6d66a70a33bb970d9b.jpeg");
+                card.setDate("10 Set.");
+                card.setOnClickListener(new Card.OnCardClickListener() {
+                    @Override
+                    public void onClick(Card card, View view) {
+                        Intent intent = new Intent(getActivity(), DetailActivity.class).putExtra(Intent.EXTRA_TEXT, card.getTitle());
+                        startActivity(intent);
+                    }
+                });
+
+                FeedCard card1 = new FeedCard(getContext());
+                card1.setTitle("This is the title 1");
+                card1.setTeaser("This is the teaser 1");
+                card1.setAuthor("Author 2");
+                card1.setImageUrl("http://www.altcoinfever.com/wp-content/uploads/2014/02/pot.png");
+                card1.setDate("20 Set.");
+
                 cards.add(card);
+                cards.add(card1);
             }
 
             mRecyclerView.setAdapter(new CardArrayRecyclerViewAdapter(getActivity(), cards));

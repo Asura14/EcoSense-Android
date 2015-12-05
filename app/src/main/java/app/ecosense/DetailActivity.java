@@ -2,6 +2,7 @@ package app.ecosense;
 
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -11,11 +12,31 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+
+import app.ecosense.cards.FeedCard;
+import app.ecosense.models.Comment;
 import app.ecosense.models.Post;
+import it.gmariotti.cardslib.library.recyclerview.internal.CardArrayRecyclerViewAdapter;
 
 public class DetailActivity extends AppCompatActivity {
+
+    public ArrayList<Post> postsFromEcosense;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +48,6 @@ public class DetailActivity extends AppCompatActivity {
                     .commit();
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -57,6 +77,7 @@ public class DetailActivity extends AppCompatActivity {
      */
     public static class PlaceholderFragment extends Fragment {
 
+
         public PlaceholderFragment() {
         }
 
@@ -67,11 +88,83 @@ public class DetailActivity extends AppCompatActivity {
 
             // The detail Activity called via intent
             Intent intent = getActivity().getIntent();
-            if (intent != null) {
-                intent.getSerializableExtra("Post");
-                rootView.findViewById(R.id.detail_text);
+            if (intent != null  && intent.hasExtra(Intent.EXTRA_TEXT)) {
+                String postString = intent.getStringExtra(Intent.EXTRA_TEXT);
+                ((TextView) rootView.findViewById(R.id.post_title)).setText(postString);
+                ((TextView) rootView.findViewById(R.id.post_description)).setText("Hello boys");
+                ((ImageView) rootView.findViewById(R.id.post_image)).setImageResource(R.mipmap.ic_launcher);
             }
             return rootView;
+        }
+    }
+
+    public class FetchPosts extends AsyncTask<String, Void, JSONArray> {
+
+        @Override
+        protected void onPostExecute(JSONArray posts) {
+            if(posts != null) {
+                for(int i = 0; i < posts.length(); i++) {
+                    try {
+                        Post newPost = new Post();
+                        JSONObject post = posts.getJSONObject(i);
+                        newPost.setAuthor(post.getString("name"));
+                        newPost.setDescription(post.getString("content"));
+                        newPost.setPostDate(post.getString("updated_at"));
+                        newPost.setTeaser(post.getString("teaser"));
+                        newPost.setTitle(post.getString("title"));
+                        newPost.setImage(post.getString("image_url"));
+                        JSONArray commentsJSON = post.getJSONArray("comments");
+                        ArrayList<Comment> commentsList = new ArrayList<>();
+                        for(int j = 0; j < commentsJSON.length(); j++) {
+                            JSONObject comment = commentsJSON.getJSONObject(j);
+                            Comment newComment = new Comment(comment.getString("name"),
+                                    comment.getString("created_at"),
+                                    comment.getString("content"));
+                            commentsList.add(newComment);
+                        }
+                        newPost.setComments(commentsList);
+                        postsFromEcosense.add(newPost);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected JSONArray doInBackground(String... uri) {
+
+            URL url = null;
+            HttpURLConnection urlConnection = null;
+            JSONArray posts = null;
+            try {
+                url = new URL("http://crispy-cow-7805.vagrantshare.com/api/posts");
+                urlConnection = (HttpURLConnection) url.openConnection();
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                posts = getJSONFromInputStream(in);
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } finally {
+                urlConnection.disconnect();
+            }
+
+            return posts;
+        }
+
+        public JSONArray getJSONFromInputStream(InputStream in) throws IOException, JSONException {
+
+            BufferedReader streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+            StringBuilder responseStrBuilder = new StringBuilder();
+
+            String inputStr;
+            while ((inputStr = streamReader.readLine()) != null)
+                responseStrBuilder.append(inputStr);
+            return new JSONArray(responseStrBuilder.toString());
         }
     }
 }

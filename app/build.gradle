@@ -46,4 +46,5 @@ dependencies {
     compile 'com.github.gabrielemariotti.cards:cardslib-extra-staggeredgrid:2.1.0'
     compile 'com.github.gabrielemariotti.cards:cardslib-extra-dragdrop:2.1.0'
     compile 'com.android.support:design:23.1.1'
+
 }
