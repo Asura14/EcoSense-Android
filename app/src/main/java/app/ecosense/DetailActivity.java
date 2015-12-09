@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -99,6 +100,14 @@ public class DetailActivity extends AppCompatActivity {
                 ((TextView) rootView.findViewById(R.id.post_description)).setText(postsFromEcosense.get(postID).getDescription());
                 ((ImageView) rootView.findViewById(R.id.post_image)).setImageResource(R.mipmap.ic_launcher);
             }
+            final Button button = (Button) rootView.findViewById(R.id.like_button);
+            button.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    //TO DO add like action
+
+                }
+            });
+
             return rootView;
         }
 
