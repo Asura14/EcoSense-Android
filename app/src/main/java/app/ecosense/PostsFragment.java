@@ -80,7 +80,7 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         mCardArrayAdapter = new CardArrayRecyclerViewAdapter(getActivity(), cards);
-        //Staggered grid view
+
         mRecyclerView = (CardRecyclerView) rootView.findViewById(R.id.feed_recyclerview);
         mRecyclerView.setHasFixedSize(false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -142,7 +142,7 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
                     @Override
                     public void onClick(Card card, View view) {
                         Activity postActivity = new Activity();
-                        Intent intent = new Intent(postActivity, DetailActivity.class).putExtra(Intent.EXTRA_TEXT, card.getId());
+                        Intent intent = new Intent(postActivity, DetailActivity.class).putExtra("ID", card.getId());
                         startActivity(intent);
                     }
                 });
@@ -159,7 +159,7 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
                 card.setOnClickListener(new Card.OnCardClickListener() {
                     @Override
                     public void onClick(Card card, View view) {
-                        Intent intent = new Intent(getActivity(), DetailActivity.class).putExtra(Intent.EXTRA_TEXT, card.getTitle());
+                        Intent intent = new Intent(getActivity(), DetailActivity.class).putExtra("Title", card.getTitle());
                         startActivity(intent);
                     }
                 });
@@ -170,6 +170,13 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
                 card1.setAuthor("Author 2");
                 card1.setImageUrl("http://www.altcoinfever.com/wp-content/uploads/2014/02/pot.png");
                 card1.setDate("20 Set.");
+                card1.setOnClickListener(new Card.OnCardClickListener() {
+                    @Override
+                    public void onClick(Card card, View view) {
+                        Intent intent = new Intent(getActivity(), DetailActivity.class).putExtra("Title", card.getTitle());
+                        startActivity(intent);
+                    }
+                });
 
                 cards.add(card);
                 cards.add(card1);

@@ -36,7 +36,7 @@ import it.gmariotti.cardslib.library.recyclerview.internal.CardArrayRecyclerView
 
 public class DetailActivity extends AppCompatActivity {
 
-    public ArrayList<Post> postsFromEcosense;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +77,7 @@ public class DetailActivity extends AppCompatActivity {
      */
     public static class PlaceholderFragment extends Fragment {
 
+        public ArrayList<Post> postsFromEcosense;
 
         public PlaceholderFragment() {
         }
@@ -86,85 +87,91 @@ public class DetailActivity extends AppCompatActivity {
 
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
-            // The detail Activity called via intent
             Intent intent = getActivity().getIntent();
-            if (intent != null  && intent.hasExtra(Intent.EXTRA_TEXT)) {
-                String postString = intent.getStringExtra(Intent.EXTRA_TEXT);
-                ((TextView) rootView.findViewById(R.id.post_title)).setText(postString);
+            if (intent != null && intent.getStringExtra("Title") != null) {
+                String postID = intent.getStringExtra("Title");
+                ((TextView) rootView.findViewById(R.id.post_title)).setText(postID);
                 ((TextView) rootView.findViewById(R.id.post_description)).setText("Hello boys");
+                ((ImageView) rootView.findViewById(R.id.post_image)).setImageResource(R.mipmap.ic_launcher);
+            } else if (intent != null) {
+                int postID = intent.getIntExtra("ID", 0);
+                ((TextView) rootView.findViewById(R.id.post_title)).setText(postsFromEcosense.get(postID).getTitle());
+                ((TextView) rootView.findViewById(R.id.post_description)).setText(postsFromEcosense.get(postID).getDescription());
                 ((ImageView) rootView.findViewById(R.id.post_image)).setImageResource(R.mipmap.ic_launcher);
             }
             return rootView;
         }
-    }
 
-    public class FetchPosts extends AsyncTask<String, Void, JSONArray> {
+        public class FetchPosts extends AsyncTask<String, Void, JSONArray> {
 
-        @Override
-        protected void onPostExecute(JSONArray posts) {
-            if(posts != null) {
-                for(int i = 0; i < posts.length(); i++) {
-                    try {
-                        Post newPost = new Post();
-                        JSONObject post = posts.getJSONObject(i);
-                        newPost.setAuthor(post.getString("name"));
-                        newPost.setDescription(post.getString("content"));
-                        newPost.setPostDate(post.getString("updated_at"));
-                        newPost.setTeaser(post.getString("teaser"));
-                        newPost.setTitle(post.getString("title"));
-                        newPost.setImage(post.getString("image_url"));
-                        JSONArray commentsJSON = post.getJSONArray("comments");
-                        ArrayList<Comment> commentsList = new ArrayList<>();
-                        for(int j = 0; j < commentsJSON.length(); j++) {
-                            JSONObject comment = commentsJSON.getJSONObject(j);
-                            Comment newComment = new Comment(comment.getString("name"),
-                                    comment.getString("created_at"),
-                                    comment.getString("content"));
-                            commentsList.add(newComment);
+            @Override
+            protected void onPostExecute(JSONArray posts) {
+                if(posts != null) {
+                    for(int i = 0; i < posts.length(); i++) {
+                        try {
+                            Post newPost = new Post();
+                            JSONObject post = posts.getJSONObject(i);
+                            newPost.setAuthor(post.getString("name"));
+                            newPost.setDescription(post.getString("content"));
+                            newPost.setPostDate(post.getString("updated_at"));
+                            newPost.setTeaser(post.getString("teaser"));
+                            newPost.setTitle(post.getString("title"));
+                            newPost.setImage(post.getString("image_url"));
+                            JSONArray commentsJSON = post.getJSONArray("comments");
+                            ArrayList<Comment> commentsList = new ArrayList<>();
+                            for(int j = 0; j < commentsJSON.length(); j++) {
+                                JSONObject comment = commentsJSON.getJSONObject(j);
+                                Comment newComment = new Comment(comment.getString("name"),
+                                        comment.getString("created_at"),
+                                        comment.getString("content"));
+                                commentsList.add(newComment);
+                            }
+                            newPost.setComments(commentsList);
+                            postsFromEcosense.add(newPost);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                        newPost.setComments(commentsList);
-                        postsFromEcosense.add(newPost);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
                 }
             }
-        }
 
-        @Override
-        protected JSONArray doInBackground(String... uri) {
+            @Override
+            protected JSONArray doInBackground(String... uri) {
 
-            URL url = null;
-            HttpURLConnection urlConnection = null;
-            JSONArray posts = null;
-            try {
-                url = new URL("http://crispy-cow-7805.vagrantshare.com/api/posts");
-                urlConnection = (HttpURLConnection) url.openConnection();
-                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                posts = getJSONFromInputStream(in);
+                URL url = null;
+                HttpURLConnection urlConnection = null;
+                JSONArray posts = null;
+                try {
+                    url = new URL("http://crispy-cow-7805.vagrantshare.com/api/posts");
+                    urlConnection = (HttpURLConnection) url.openConnection();
+                    InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                    posts = getJSONFromInputStream(in);
 
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } finally {
-                urlConnection.disconnect();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    urlConnection.disconnect();
+                }
+
+                return posts;
             }
 
-            return posts;
-        }
+            public JSONArray getJSONFromInputStream(InputStream in) throws IOException, JSONException {
 
-        public JSONArray getJSONFromInputStream(InputStream in) throws IOException, JSONException {
+                BufferedReader streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+                StringBuilder responseStrBuilder = new StringBuilder();
 
-            BufferedReader streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-            StringBuilder responseStrBuilder = new StringBuilder();
-
-            String inputStr;
-            while ((inputStr = streamReader.readLine()) != null)
-                responseStrBuilder.append(inputStr);
-            return new JSONArray(responseStrBuilder.toString());
+                String inputStr;
+                while ((inputStr = streamReader.readLine()) != null)
+                    responseStrBuilder.append(inputStr);
+                return new JSONArray(responseStrBuilder.toString());
+            }
         }
     }
+
+
 }
