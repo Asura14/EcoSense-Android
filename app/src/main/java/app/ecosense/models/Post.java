@@ -2,12 +2,13 @@ package app.ecosense.models;
 
 import android.text.format.DateUtils;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Post {
+public class Post implements Serializable {
     private String title;
     private String teaser;
     private String description;
@@ -50,7 +51,10 @@ public class Post {
         this.comments = comments;
     }
     public void setImage(String image) {
-        this.image = image;
+        if(image.equals("")) {
+            this.image = "http://ecosenselighting.com/wp-content/uploads/2013/04/ecosense-logo-300x137.png";
+        }else
+            this.image = image;
     }
 
     public String getTitle() {

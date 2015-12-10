@@ -16,24 +16,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
-import app.ecosense.cards.FeedCard;
-import app.ecosense.models.Comment;
 import app.ecosense.models.Post;
-import it.gmariotti.cardslib.library.recyclerview.internal.CardArrayRecyclerViewAdapter;
+import app.ecosense.web.DownloadImageTask;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -84,7 +70,7 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
@@ -95,11 +81,15 @@ public class DetailActivity extends AppCompatActivity {
                 ((TextView) rootView.findViewById(R.id.post_description)).setText("Hello boys");
                 ((ImageView) rootView.findViewById(R.id.post_image)).setImageResource(R.mipmap.ic_launcher);
             } else if (intent != null) {
-                int postID = intent.getIntExtra("ID", 0);
-                ((TextView) rootView.findViewById(R.id.post_title)).setText(postsFromEcosense.get(postID).getTitle());
-                ((TextView) rootView.findViewById(R.id.post_description)).setText(postsFromEcosense.get(postID).getDescription());
-                ((ImageView) rootView.findViewById(R.id.post_image)).setImageResource(R.mipmap.ic_launcher);
+                Post post = (Post) intent.getSerializableExtra("post");
+                ((TextView) rootView.findViewById(R.id.post_title)).setText(post.getTitle());
+                ((TextView) rootView.findViewById(R.id.post_description)).setText(post.getDescription());
+                if(post.getImage() != null) {
+                    new DownloadImageTask((ImageView) rootView.findViewById(R.id.post_image)).execute(post.getImage());
+                }
             }
+
+
             final Button button = (Button) rootView.findViewById(R.id.like_button);
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -110,77 +100,5 @@ public class DetailActivity extends AppCompatActivity {
 
             return rootView;
         }
-
-        public class FetchPosts extends AsyncTask<String, Void, JSONArray> {
-
-            @Override
-            protected void onPostExecute(JSONArray posts) {
-                if(posts != null) {
-                    for(int i = 0; i < posts.length(); i++) {
-                        try {
-                            Post newPost = new Post();
-                            JSONObject post = posts.getJSONObject(i);
-                            newPost.setAuthor(post.getString("name"));
-                            newPost.setDescription(post.getString("content"));
-                            newPost.setPostDate(post.getString("updated_at"));
-                            newPost.setTeaser(post.getString("teaser"));
-                            newPost.setTitle(post.getString("title"));
-                            newPost.setImage(post.getString("image_url"));
-                            JSONArray commentsJSON = post.getJSONArray("comments");
-                            ArrayList<Comment> commentsList = new ArrayList<>();
-                            for(int j = 0; j < commentsJSON.length(); j++) {
-                                JSONObject comment = commentsJSON.getJSONObject(j);
-                                Comment newComment = new Comment(comment.getString("name"),
-                                        comment.getString("created_at"),
-                                        comment.getString("content"));
-                                commentsList.add(newComment);
-                            }
-                            newPost.setComments(commentsList);
-                            postsFromEcosense.add(newPost);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-
-            @Override
-            protected JSONArray doInBackground(String... uri) {
-
-                URL url = null;
-                HttpURLConnection urlConnection = null;
-                JSONArray posts = null;
-                try {
-                    url = new URL("http://crispy-cow-7805.vagrantshare.com/api/posts");
-                    urlConnection = (HttpURLConnection) url.openConnection();
-                    InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                    posts = getJSONFromInputStream(in);
-
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } finally {
-                    urlConnection.disconnect();
-                }
-
-                return posts;
-            }
-
-            public JSONArray getJSONFromInputStream(InputStream in) throws IOException, JSONException {
-
-                BufferedReader streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-                StringBuilder responseStrBuilder = new StringBuilder();
-
-                String inputStr;
-                while ((inputStr = streamReader.readLine()) != null)
-                    responseStrBuilder.append(inputStr);
-                return new JSONArray(responseStrBuilder.toString());
-            }
-        }
     }
-
-
 }

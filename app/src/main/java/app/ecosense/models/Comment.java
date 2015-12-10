@@ -1,6 +1,8 @@
 package app.ecosense.models;
 
-public class Comment {
+import java.io.Serializable;
+
+public class Comment implements Serializable{
 
     private String name;
     private String date;
@@ -18,7 +20,5 @@ public class Comment {
     public String getDate() {
         return date;
     }
-    public String getName() {
-        return name;
-    }
+    public String getName() {return name; }
 }
