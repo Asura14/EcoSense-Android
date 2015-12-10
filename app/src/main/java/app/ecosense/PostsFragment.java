@@ -7,13 +7,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,7 +42,6 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
     public ArrayList<Post> postsFromEcosense = new ArrayList<>();
     public CardRecyclerView mRecyclerView;
     public ArrayList<Card> cards = new ArrayList<>();
-    public Card.OnCardClickListener mCardListener;
 
     public PostsFragment() {}
 
@@ -90,6 +89,15 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
         if (mRecyclerView != null) {
             mRecyclerView.setAdapter(mCardArrayAdapter);
         }
+
+
+        final Button button = (Button) rootView.findViewById(R.id.new_post_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent newPost = new Intent(getActivity(), NewPostActivity.class);
+                startActivity(newPost);
+            }
+        });
 
         return rootView;
     }
@@ -144,7 +152,6 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
                     @Override
                     public void onClick(Card card, View view) {
                         Post post = postsFromEcosense.get(Integer.parseInt(card.getId()));
-                        Log.d("POST: ", post.getTitle());
                         Intent intent = new Intent(getActivity(), DetailActivity.class);
                         intent.putExtra("post", post);
                         startActivity(intent);
