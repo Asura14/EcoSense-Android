@@ -4,6 +4,7 @@
 
     <string name="action_refresh" translatable="false">Refresh</string>
     <string name="title_activity_detail">DetailActivity</string>
+    <string name="create_post">New Post</string>
 
     <!--Action bar-->
     <string name="action_settings">Settings</string>
