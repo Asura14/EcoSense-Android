@@ -31,8 +31,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -88,10 +102,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                //attemptLogin();
-                Log.d("Login", "login");
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+                attemptLogin();
+                //Log.d("Login", "login");
+                //Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                //startActivity(intent);
             }
         });
 
@@ -161,7 +175,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
+
         boolean cancel = false;
+        /*
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
@@ -181,11 +197,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             focusView = mEmailView;
             cancel = true;
         }
+        */
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
-            focusView.requestFocus();
+            //focusView.requestFocus();
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
@@ -313,11 +330,50 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
+            URL url = null;
+            HttpURLConnection urlConnection = null;
+
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
+                url = new URL("http://hungry-rabbit-4644.vagrantshare.com/oauth/token");
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setDoOutput(true);
+                urlConnection.setChunkedStreamingMode(0);
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+                urlConnection.setRequestProperty("Accept", "application/json");
+
+                JSONObject cred = new JSONObject();
+                cred.put("grant_type","password");
+                cred.put("username",mEmail);
+                cred.put("password",mPassword);
+
+
+                OutputStream writer = urlConnection.getOutputStream();
+                writer.write(cred.toString().getBytes("UTF-8"));
+                writer.close();
+
+                //Log.d("Type", urlConnection.getHeaderField("Content-Type"));
+                //Log.d("Request-Method", urlConnection.getRequestMethod());
+                //Log.d("Ta a mandar tamanho", String.valueOf(urlConnection.getContentLength()));
+
+                //writeStream(out);
+                Map<String, List<String>> header = urlConnection.getHeaderFields();
+
+                for (Map.Entry<String, List<String>> entry : header.entrySet()) {
+                    Log.d(entry.getKey(), entry.getValue().toString());
+                }
+
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                Log.d("Response: ", String.valueOf(urlConnection.getResponseCode()));
+                //readStream(in);
+
+
+
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            } finally {
+                assert urlConnection != null;
+                urlConnection.disconnect();
             }
 
             for (String credential : DUMMY_CREDENTIALS) {

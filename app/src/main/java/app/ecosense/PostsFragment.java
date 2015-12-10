@@ -164,7 +164,7 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
             HttpURLConnection urlConnection = null;
             JSONArray posts = null;
             try {
-                url = new URL("http://scrumptious-monster-1144.vagrantshare.com/api/posts");
+                url = new URL("http://soaring-llama-1432.vagrantshare.com/api/posts");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
                 posts = getJSONFromInputStream(in);
