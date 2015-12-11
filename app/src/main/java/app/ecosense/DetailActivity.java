@@ -62,8 +62,6 @@ public class DetailActivity extends AppCompatActivity {
      */
     public static class PlaceholderFragment extends Fragment {
 
-        public ArrayList<Post> postsFromEcosense;
-
         public PlaceholderFragment() {
         }
 
@@ -73,12 +71,7 @@ public class DetailActivity extends AppCompatActivity {
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
             Intent intent = getActivity().getIntent();
-            if (intent != null && intent.getStringExtra("Title") != null) {
-                String postID = intent.getStringExtra("Title");
-                ((TextView) rootView.findViewById(R.id.post_title)).setText(postID);
-                ((TextView) rootView.findViewById(R.id.post_description)).setText("Hello boys");
-                ((ImageView) rootView.findViewById(R.id.post_image)).setImageResource(R.mipmap.ic_launcher);
-            } else if (intent != null) {
+            if (intent != null) {
                 Post post = (Post) intent.getSerializableExtra("post");
                 ((TextView) rootView.findViewById(R.id.post_title)).setText(post.getTitle());
                 ((TextView) rootView.findViewById(R.id.post_description)).setText(post.getDescription());
@@ -87,11 +80,10 @@ public class DetailActivity extends AppCompatActivity {
                 }
             }
 
-
             final Button button = (Button) rootView.findViewById(R.id.like_button);
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    //TO DO add like action
+                    //TODO add LIKE action
 
                 }
             });

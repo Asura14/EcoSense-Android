@@ -9,17 +9,13 @@
         android:gravity="center"
         android:maxLines="1"
         android:textSize="35sp"
-        android:text="@string/create_post"/>
-
-    <Spinner
-        android:id="@+id/user_spinner"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:text="New Issue"/>
 
     <TextView
+        android:layout_marginTop="@dimen/actions_padding_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
+        android:textSize="20sp"
         android:text="Title"/>
 
 
@@ -28,32 +24,44 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="Enter Post Title"
-        android:inputType="number"/>
+        android:inputType="text"/>
 
     <TextView
+        android:layout_marginTop="@dimen/actions_padding_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
+        android:textSize="20sp"
         android:text="Teaser"/>
 
     <EditText
+        android:layout_height="wrap_content"
         android:id="@+id/new_post_teaser"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
         android:hint="Enter Post Teaser"
-        android:inputType="number"/>
+        android:inputType="text"/>
 
     <TextView
+        android:layout_marginTop="@dimen/actions_padding_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
+        android:textSize="20sp"
         android:text="Content"/>
 
     <EditText
         android:id="@+id/new_post_content"
+        android:hint="Enter Post Content"
+        android:lines="4"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter Post Content"
-        android:inputType="number"/>
+        android:inputType="textMultiLine"
+        android:gravity="top|start"/>
+
+    <Button
+        android:id="@+id/send_post_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/card_undobar_material_text_color"
+        android:text="Send"/>
 
 </LinearLayout>
