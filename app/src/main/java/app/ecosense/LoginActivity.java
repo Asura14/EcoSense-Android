@@ -36,8 +36,10 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -334,7 +336,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             HttpURLConnection urlConnection = null;
 
             try {
-                url = new URL("http://hungry-rabbit-4644.vagrantshare.com/oauth/token");
+                url = new URL("http://bitter-hog-4778.vagrantshare.com/oauth/token");
 
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
@@ -344,8 +346,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 JSONObject cred = new JSONObject();
                 cred.put("grant_type","password");
-                cred.put("username",mEmail);
-                cred.put("password",mPassword);
+                cred.put("username","asura@mail.com");
+                cred.put("password","password");
 
 
                 OutputStream writer = urlConnection.getOutputStream();
@@ -365,9 +367,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
                 Log.d("Response: ", String.valueOf(urlConnection.getResponseCode()));
-                //readStream(in);
-
-
+                BufferedReader r = new BufferedReader(new InputStreamReader(in));
+                StringBuilder total = new StringBuilder();
+                String line;
+                while ((line = r.readLine()) != null) {
+                    total.append(line);
+                }
+                JSONObject reader = new JSONObject(total.toString());
+                String token = reader.getString("access_token");
 
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
