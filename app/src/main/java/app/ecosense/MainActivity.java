@@ -1,33 +1,12 @@
 package app.ecosense;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import app.ecosense.models.Comment;
-import app.ecosense.models.Post;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -55,36 +34,17 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            startActivity(new Intent(this, SettingsActivity.class));
+        if (id == R.id.action_refresh) {
+            this.finish();
+            startActivity(new Intent(this, MainActivity.class));
             return true;
-        }
-        if (id == R.id.action_map) {
-            openPreferredLocationInMap();
+        } else if(id == R.id.logout) {
+            PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).edit().remove("TOKEN").commit();
+            this.finish();
+            startActivity(new Intent(this, LoginActivity.class));
             return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void openPreferredLocationInMap() {
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String location = sharedPrefs.getString(
-                getString(R.string.pref_location_key),
-                getString(R.string.pref_location_default));
-
-        // Using the URI scheme for showing a location found on a map
-        Uri geoLocation = Uri.parse("geo:0,0?").buildUpon()
-                .appendQueryParameter("q", location)
-                .build();
-
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(geoLocation);
-
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        } else {
-            Log.d("", "Couldn't call " + location + ", no receiving apps installed!");
-        }
     }
 }

@@ -16,6 +16,7 @@ public class Post implements Serializable {
     private String postDate;
     private ArrayList<Comment> comments;
     private String image;
+    private int id;
 
     public Post() {}
     public Post(String title, String teaser, String description, String author, String postDate) {
@@ -56,6 +57,9 @@ public class Post implements Serializable {
         }else
             this.image = image;
     }
+    public void setID(int id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
@@ -78,4 +82,5 @@ public class Post implements Serializable {
     public String getImage() {
         return image;
     }
+    public int getID() { return this.id; }
 }

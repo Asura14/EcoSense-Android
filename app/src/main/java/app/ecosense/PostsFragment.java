@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import app.ecosense.cards.FeedCard;
 import app.ecosense.models.Comment;
 import app.ecosense.models.Post;
+import app.ecosense.web.Api;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.recyclerview.internal.CardArrayRecyclerViewAdapter;
 import it.gmariotti.cardslib.library.recyclerview.view.CardRecyclerView;
@@ -68,9 +70,6 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_refresh) {
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -122,6 +121,7 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
                         newPost.setTeaser(post.getString("teaser"));
                         newPost.setTitle(post.getString("title"));
                         newPost.setImage(post.getString("image_url"));
+                        newPost.setID(Integer.parseInt(post.getString("id")));
                         JSONArray commentsJSON = post.getJSONArray("comments");
                         ArrayList<Comment> commentsList = new ArrayList<>();
                         for(int j = 0; j < commentsJSON.length(); j++) {
@@ -142,6 +142,7 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
             // Add cards
             for(int i = 0; i < postsFromEcosense.size() && i < 30; i++) {
                 FeedCard card = new FeedCard(getContext());
+                card.setActivity(getActivity());
                 card.setTitle(postsFromEcosense.get(i).getTitle());
                 card.setTeaser(postsFromEcosense.get(i).getTeaser());
                 card.setAuthor(postsFromEcosense.get(i).getAuthor());
@@ -170,9 +171,13 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
             URL url = null;
             HttpURLConnection urlConnection = null;
             JSONArray posts = null;
+            String token = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext())
+                    .getString("TOKEN", "token not found");
+
             try {
-                url = new URL("http://soaring-llama-1432.vagrantshare.com/api/posts");
+                url = new URL(Api.URL_PATH + "api/posts");
                 urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestProperty("Authorization", "Bearer " + token);
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
                 posts = getJSONFromInputStream(in);
 

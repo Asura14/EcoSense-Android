@@ -1,6 +1,7 @@
 package app.ecosense.cards;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ public class FeedCard extends Card {
     private String author;
     private String imageUrl;
     private String date;
+    private Activity activity;
 
 
     public FeedCard(Context context) {
@@ -77,6 +79,8 @@ public class FeedCard extends Card {
         this.date = date;
     }
 
+    public void setActivity(Activity activity) { this.activity = activity; }
+
     public String getTitle() {
         return this.title;
     }
@@ -126,6 +130,6 @@ public class FeedCard extends Card {
             mDate.setText(this.date);
 
         if(imageUrl != null)
-            new DownloadImageTask(mImage).execute(imageUrl);
+            new DownloadImageTask(mImage, activity).execute(imageUrl);
     }
 }

@@ -3,8 +3,10 @@ package app.ecosense;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,10 +15,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.ArrayList;
+import org.json.JSONArray;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import app.ecosense.models.Post;
+import app.ecosense.web.Api;
 import app.ecosense.web.DownloadImageTask;
 
 public class DetailActivity extends AppCompatActivity {
@@ -48,11 +57,6 @@ public class DetailActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            startActivity(new Intent(this, SettingsActivity.class));
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -61,6 +65,8 @@ public class DetailActivity extends AppCompatActivity {
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
+
+        Post post;
 
         public PlaceholderFragment() {
         }
@@ -72,22 +78,14 @@ public class DetailActivity extends AppCompatActivity {
 
             Intent intent = getActivity().getIntent();
             if (intent != null) {
-                Post post = (Post) intent.getSerializableExtra("post");
+                post = (Post) intent.getSerializableExtra("post");
                 ((TextView) rootView.findViewById(R.id.post_title)).setText(post.getTitle());
                 ((TextView) rootView.findViewById(R.id.post_description)).setText(post.getDescription());
                 if(post.getImage() != null) {
-                    new DownloadImageTask((ImageView) rootView.findViewById(R.id.post_image)).execute(post.getImage());
+                    new DownloadImageTask((ImageView) rootView.findViewById(R.id.post_image), getActivity()).execute(post.getImage());
                 }
             }
-
-            final Button button = (Button) rootView.findViewById(R.id.like_button);
-            button.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    //TODO add LIKE action
-
-                }
-            });
-
+            getActivity().setTitle(post.getTitle());
             return rootView;
         }
     }

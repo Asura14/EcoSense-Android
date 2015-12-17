@@ -1,9 +1,11 @@
 package app.ecosense.web;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -16,10 +18,14 @@ import java.net.URL;
 
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     ImageView bmImage;
+    Activity activity;
 
-    public DownloadImageTask(ImageView bmImage) {
+    public DownloadImageTask(ImageView bmImage, Activity activity) {
+
         this.bmImage = bmImage;
+        this.activity = activity;
     }
+
 
     protected Bitmap doInBackground(String... urls) {
 
@@ -28,6 +34,10 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
             url = new URL(urls[0]);
 
             InputStream in = url.openConnection().getInputStream();
+
+            String token = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext())
+                    .getString("TOKEN", "token not found");
+
             BufferedInputStream bis = new BufferedInputStream(in,1024*8);
             ByteArrayOutputStream out = new ByteArrayOutputStream();
 
