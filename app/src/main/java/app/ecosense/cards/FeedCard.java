@@ -112,8 +112,8 @@ public class FeedCard extends Card {
         mDate = (TextView) parent.findViewById(R.id.card_date);
 
         android.view.ViewGroup.LayoutParams layoutParams = mImage.getLayoutParams();
-        layoutParams.width = 100;
-        layoutParams.height = 100;
+        layoutParams.width = 200;
+        layoutParams.height = 200;
         mImage.setLayoutParams(layoutParams);
 
 

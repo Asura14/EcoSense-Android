@@ -84,6 +84,8 @@ public class DetailActivity extends AppCompatActivity {
                 if(post.getImage() != null) {
                     new DownloadImageTask((ImageView) rootView.findViewById(R.id.post_image), getActivity()).execute(post.getImage());
                 }
+                ((TextView) rootView.findViewById(R.id.post_author)).setText(post.getAuthor());
+                ((TextView) rootView.findViewById(R.id.post_date)).setText(post.getPostDate());
             }
             getActivity().setTitle(post.getTitle());
             return rootView;

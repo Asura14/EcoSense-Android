@@ -79,12 +79,10 @@ public class NewPostActivity extends AppCompatActivity {
     public static class PlaceholderFragment extends Fragment {
 
         EditText mPostTitle;
-        EditText mPostTeaser;
         EditText mPostDescription;
         Button mSendPostButton;
 
         String postTitle;
-        String postTeaser;
         String postDescription;
 
         public PlaceholderFragment() {

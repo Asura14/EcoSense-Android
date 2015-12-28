@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:hint="Enter Post Title"
         android:inputType="text"/>
-    
+
     <TextView
         android:layout_marginTop="@dimen/actions_padding_button"
         android:layout_width="wrap_content"

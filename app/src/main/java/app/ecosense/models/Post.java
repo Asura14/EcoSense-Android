@@ -53,7 +53,7 @@ public class Post implements Serializable {
     }
     public void setImage(String image) {
         if(image.equals("")) {
-            this.image = "http://ecosenselighting.com/wp-content/uploads/2013/04/ecosense-logo-300x137.png";
+            this.image = "http://s18.postimg.org/49u5y8oyh/logo_Eco_Sense1.png";
         }else
             this.image = image;
     }
