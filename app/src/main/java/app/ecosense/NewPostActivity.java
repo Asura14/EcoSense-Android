@@ -130,7 +130,7 @@ public class NewPostActivity extends AppCompatActivity {
                     post.setTitle(String.valueOf(mPostTitle.getText()));
                     String description = String.valueOf(mPostDescription.getText());
                     post.setDescription(String.valueOf(mPostDescription.getText()));
-                    String teaser = description.substring(0, 15);
+                    String teaser = description.substring(0, 30);
                     post.setTeaser(teaser);
                     ((NewPostActivity) getActivity()).createPost(post, currentLoc);
                 }
