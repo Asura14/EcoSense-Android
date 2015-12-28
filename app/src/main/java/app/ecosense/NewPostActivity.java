@@ -118,13 +118,6 @@ public class NewPostActivity extends AppCompatActivity {
                 }
             });
 
-            mPostTeaser = (EditText)rootView.findViewById(R.id.new_post_teaser);
-            mPostTeaser.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    postTeaser = mPostTeaser.getText().toString();
-                }
-            });
-
             mPostDescription = (EditText)rootView.findViewById(R.id.new_post_content);
             mPostDescription.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
@@ -137,8 +130,10 @@ public class NewPostActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     Post post = new Post();
                     post.setTitle(String.valueOf(mPostTitle.getText()));
-                    post.setTeaser(String.valueOf(mPostTeaser.getText()));
+                    String description = String.valueOf(mPostDescription.getText());
                     post.setDescription(String.valueOf(mPostDescription.getText()));
+                    String teaser = description.substring(0, 15);
+                    post.setTeaser(teaser);
                     ((NewPostActivity) getActivity()).createPost(post, currentLoc);
                 }
             });

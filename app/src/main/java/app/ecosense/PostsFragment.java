@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -121,6 +122,7 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
                         newPost.setTeaser(post.getString("teaser"));
                         newPost.setTitle(post.getString("title"));
                         newPost.setImage(post.getString("image_url"));
+                        Log.d("HERE: ", newPost.getImage());
                         newPost.setID(Integer.parseInt(post.getString("id")));
                         JSONArray commentsJSON = post.getJSONArray("comments");
                         ArrayList<Comment> commentsList = new ArrayList<>();
@@ -145,7 +147,9 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
                 card.setActivity(getActivity());
                 card.setTitle(postsFromEcosense.get(i).getTitle());
                 card.setTeaser(postsFromEcosense.get(i).getTeaser());
-                card.setAuthor(postsFromEcosense.get(i).getAuthor());
+                String mystring = postsFromEcosense.get(i).getAuthor();
+                String arr[] = mystring.split(" ");
+                card.setAuthor(arr[0]);
                 card.setImageUrl(postsFromEcosense.get(i).getImage());
                 card.setDate(postsFromEcosense.get(i).getPostDate());
                 card.setId(String.valueOf(i));

@@ -16,6 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
+        android:textColor="#333333"
         android:text="Title"/>
 
 
@@ -25,26 +26,13 @@
         android:layout_height="wrap_content"
         android:hint="Enter Post Title"
         android:inputType="text"/>
-
+    
     <TextView
         android:layout_marginTop="@dimen/actions_padding_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:text="Teaser"/>
-
-    <EditText
-        android:layout_height="wrap_content"
-        android:id="@+id/new_post_teaser"
-        android:layout_width="fill_parent"
-        android:hint="Enter Post Teaser"
-        android:inputType="text"/>
-
-    <TextView
-        android:layout_marginTop="@dimen/actions_padding_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
+        android:textColor="#333333"
         android:text="Content"/>
 
     <EditText
@@ -61,7 +49,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@color/card_undobar_material_text_color"
+        android:background="#FF2DBE60"
+        android:textColor="#FFFFFFFF"
         android:text="Send"/>
 
 </LinearLayout>

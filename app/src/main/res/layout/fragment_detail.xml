@@ -23,11 +23,12 @@
 
         <TextView
             android:id="@+id/post_title"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:maxLines="1"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textColor="#333333"/>
 
         <View
             android:layout_width="match_parent"
@@ -39,7 +40,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"
-            android:paddingTop="20dp"/>
+            android:paddingTop="20dp"
+            android:lineSpacingExtra="5sp"/>
 
 
     </LinearLayout>
