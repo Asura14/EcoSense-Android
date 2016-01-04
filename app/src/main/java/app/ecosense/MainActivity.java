@@ -43,8 +43,10 @@ public class MainActivity extends AppCompatActivity {
             this.finish();
             startActivity(new Intent(this, LoginActivity.class));
             return true;
+        } else if(id == R.id.topCompanies) {
+            startActivity(new Intent (this, TopCompaniesActivity.class));
+            return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

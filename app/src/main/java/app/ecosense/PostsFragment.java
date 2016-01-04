@@ -107,7 +107,7 @@ public class PostsFragment extends Fragment implements CardView.OnClickListener 
         super.onStart();
     }
 
-    public class FetchPosts extends AsyncTask<String, Void, JSONArray> {
+        public class FetchPosts extends AsyncTask<String, Void, JSONArray> {
 
         @Override
         protected void onPostExecute(JSONArray posts) {

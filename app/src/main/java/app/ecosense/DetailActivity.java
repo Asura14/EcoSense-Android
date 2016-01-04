@@ -3,29 +3,16 @@ package app.ecosense;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.json.JSONArray;
-
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import app.ecosense.models.Post;
-import app.ecosense.web.Api;
 import app.ecosense.web.DownloadImageTask;
 
 public class DetailActivity extends AppCompatActivity {

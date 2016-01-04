@@ -17,6 +17,8 @@ public class Post implements Serializable {
     private ArrayList<Comment> comments;
     private String image;
     private int id;
+    private double altitude;
+    private double longitude;
 
     public Post() {}
     public Post(String title, String teaser, String description, String author, String postDate) {
@@ -26,9 +28,7 @@ public class Post implements Serializable {
         this.author = author;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public void setTitle(String title) {this.title = title;}
     public void setTeaser(String teaser) {
         this.teaser = teaser;
     }
@@ -45,9 +45,7 @@ public class Post implements Serializable {
             e.printStackTrace();
         }
     }
-    public void setAuthor(String author) {
-        this.author = author;
-    }
+    public void setAuthor(String author) {this.author = author;}
     public void setComments(ArrayList<Comment> comments) {
         this.comments = comments;
     }
@@ -60,27 +58,17 @@ public class Post implements Serializable {
     public void setID(int id) {
         this.id = id;
     }
+    public void setAltitude(double altitude) {this.altitude = altitude;}
+    public void setLongitude(double longitude) {this.longitude = longitude;}
 
-    public String getTitle() {
-        return title;
-    }
-    public String getTeaser() {
-        return teaser;
-    }
-    public String getDescription() {
-        return description;
-    }
-    public String getAuthor() {
-        return author;
-    }
-    public String getPostDate() {
-        return postDate;
-    }
-    public ArrayList<Comment> getComments() {
-        return comments;
-    }
-    public String getImage() {
-        return image;
-    }
+    public String getTitle() {return title;}
+    public String getTeaser() {return teaser;}
+    public String getDescription() {return description;}
+    public String getAuthor() {return author;}
+    public String getPostDate() {return postDate;}
+    public ArrayList<Comment> getComments() {return comments;}
+    public String getImage() {return image;}
     public int getID() { return this.id; }
+    public double getAltitude() {return altitude;}
+    public double getLongitude() {return longitude;}
 }

@@ -41,6 +41,14 @@
                 android:value="app.ecosense.MainActivity" />
         </activity>
         <activity
+            android:name=".TopCompaniesActivity"
+            android:label="Top Companies"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="app.ecosense.MainActivity" />
+        </activity>
+        <activity
             android:name=".LoginActivity"
             android:label="@string/app_name">
             <intent-filter>
