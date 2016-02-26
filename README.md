@@ -1,33 +1,23 @@
 # LDSO1516T1G3 - EcoSense App for Android
 
-##Authors
-
-- Luis Miguel Gonçalves, ei12080
-- José Miguel Melo, ei12050
-- Ricardo Loureiro, ei12034
-- Rui Gomes, ei12038
-- Tiago Ferreira, ei12051
-
+This app was developed for EcoSense by Computer Engineering students longside it's [website](http://ecosense.herokuapp.com/).
 
 ##Overview
 
-A ecosense é uma plataforma social na àrea do ambiente que permite identificar e resolver problemas ecológicos.
-Permite ainda às empresas e utilizadores partilhar as suas boas práticas ambientais de maneira a sensibilizar a sociedade.
-Aplicação mobile permite ver a feed da rede social bem como publicar Issues ambientais utilizando a posição do utilizador.
-
-##Positive points
-
-Foi desenvolvido conjuntamente com o product owner apesar do conceito da app ter sido totalmente pensado e desenvolvido pelo grupo.
+EcoSense is a social platform oriented towards environmental issues, with the intent of alarming people and fixing these same projects.
+The app works alongside the website using it's API to post location based posts, view your wall and read other posts. The main porpuse of the app is the location based post called "Issue" that shares your current location, allows you to upload a photo and a small text aleting for a specific ecological issue in the area.
 
 ##Negative points
 
-Com mais tempo poderiam ser implementadas mais features que ajudariam a uma melhor experiência de utilização como puder comentar em posts e e adicionar imagens aos mesmos.
+The time constraint didn't allow me to complete the App in order for it to do all that the website does. However the base points were complete.
 
-##Video promocional
+##Promotional Video
 
 https://www.youtube.com/watch?v=HpkBhqHBw0s&feature=youtu.be
 
+##Screenshots
 
+![App](https://i.gyazo.com/80bffe98bb0b13c10eb55ea349541826.png)
 
 
 
